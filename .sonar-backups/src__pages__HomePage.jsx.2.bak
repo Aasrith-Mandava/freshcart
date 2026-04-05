@@ -93,7 +93,7 @@ export default function HomePage() {
               },
             ].map((step, index) => (
               <motion.div
-                key={`step-${index.toString()}`}
+                key={`step-${index}`}
                 className="step-card"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -122,17 +122,17 @@ export default function HomePage() {
           <div className="categories-grid">
             {categories.map((cat, index) => (
               <motion.div
-                key={`category-${cat.id.toString()}`}
+                key={`category-${cat.id}`}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
               >
                 <Link
-                  to={`/category/${cat.id.toString()}`}
+                  to={`/category/${cat.id}`}
                   className="category-card"
                   style={{ '--cat-color': cat.color }}
-                  id={`category-${cat.id.toString()}`}
+                  id={`category-${cat.id}`}
                 >
                   <span className="category-icon">{cat.icon}</span>
                   <span className="category-name">{cat.name}</span>
@@ -154,7 +154,7 @@ export default function HomePage() {
           </div>
           <div className="products-grid">
             {featured.map((product, index) => (
-              <ProductCard key={`product-${product.id.toString()}`} product={product} index={index} />
+              <ProductCard key={`product-${product.id}`} product={product} index={index} />
             ))}
           </div>
         </div>
@@ -174,7 +174,7 @@ export default function HomePage() {
             </div>
             <div className="products-grid">
               {deals.map((product, index) => (
-                <ProductCard key={`deal-${product.id.toString()}`} product={product} index={index} />
+                <ProductCard key={`deal-${product.id}`} product={product} index={index} />
               ))}
             </div>
           </div>
@@ -193,16 +193,16 @@ export default function HomePage() {
           <div className="stores-grid">
             {stores.map((store, index) => (
               <motion.div
-                key={`store-${store.id.toString()}`}
+                key={`store-${store.id}`}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
                 <Link
-                  to={`/store/${store.id.toString()}`}
+                  to={`/store/${store.id}`}
                   className="store-card"
-                  id={`store-${store.id.toString()}`}
+                  id={`store-${store.id}`}
                 >
                   <div
                     className="store-card-banner"

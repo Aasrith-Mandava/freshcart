@@ -24,7 +24,7 @@ export default function HomePage() {
               <Zap size={14} /> Free delivery on orders $35+
             </div>
             <h1>
-              Groceries delivered in{' '} 
+              Groceries delivered in{' '}
               <span className="hero-highlight">as fast as 30 min</span>
             </h1>
             <p className="hero-subtitle">
@@ -72,38 +72,38 @@ export default function HomePage() {
           <div className="steps-grid">
             {[
               {
-                icon: <Star size={28} />, 
+                icon: <Star size={28} />,
                 title: 'Choose Your Store',
                 desc: 'Browse from top local stores near you',
               },
               {
-                icon: <Shield size={28} />, 
+                icon: <Shield size={28} />,
                 title: 'Pick Your Items',
                 desc: 'Add groceries to your cart with one tap',
               },
               {
-                icon: <Truck size={28} />, 
+                icon: <Truck size={28} />,
                 title: 'Fast Delivery',
                 desc: 'A personal shopper delivers to your door',
               },
               {
-                icon: <Clock size={28} />, 
+                icon: <Clock size={28} />,
                 title: 'Enjoy & Repeat',
                 desc: 'Reorder your favorites anytime',
               },
-            ].map((step, index) => (
+            ].map((step, i) => (
               <motion.div
-                key={`step-${index.toString()}`}
+                key={i}
                 className="step-card"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.15 }}
+                transition={{ delay: i * 0.15 }}
               >
                 <div className="step-icon">{step.icon}</div>
                 <h3>{step.title}</h3>
                 <p>{step.desc}</p>
-                <div className="step-number">{index + 1}</div>
+                <div className="step-number">{i + 1}</div>
               </motion.div>
             ))}
           </div>
@@ -120,19 +120,19 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="categories-grid">
-            {categories.map((cat, index) => (
+            {categories.map((cat, i) => (
               <motion.div
-                key={`category-${cat.id.toString()}`}
+                key={cat.id}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
+                transition={{ delay: i * 0.05 }}
               >
                 <Link
-                  to={`/category/${cat.id.toString()}`}
+                  to={`/category/${cat.id}`}
                   className="category-card"
                   style={{ '--cat-color': cat.color }}
-                  id={`category-${cat.id.toString()}`}
+                  id={`category-${cat.id}`}
                 >
                   <span className="category-icon">{cat.icon}</span>
                   <span className="category-name">{cat.name}</span>
@@ -153,8 +153,8 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="products-grid">
-            {featured.map((product, index) => (
-              <ProductCard key={`product-${product.id.toString()}`} product={product} index={index} />
+            {featured.map((product, i) => (
+              <ProductCard key={product.id} product={product} index={i} />
             ))}
           </div>
         </div>
@@ -166,15 +166,15 @@ export default function HomePage() {
           <div className="section-container">
             <div className="section-header">
               <h2 className="section-title">
-                <Zap size={24} className="deals-icon" /> Today's Deals
+                <Zap size={24} className="deals-icon" /> Today&apos;s Deals
               </h2>
               <Link to="/deals" className="section-link">
                 All deals <ArrowRight size={16} />
               </Link>
             </div>
             <div className="products-grid">
-              {deals.map((product, index) => (
-                <ProductCard key={`deal-${product.id.toString()}`} product={product} index={index} />
+              {deals.map((product, i) => (
+                <ProductCard key={product.id} product={product} index={i} />
               ))}
             </div>
           </div>
@@ -191,18 +191,18 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="stores-grid">
-            {stores.map((store, index) => (
+            {stores.map((store, i) => (
               <motion.div
-                key={`store-${store.id.toString()}`}
+                key={store.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: i * 0.1 }}
               >
                 <Link
-                  to={`/store/${store.id.toString()}`}
+                  to={`/store/${store.id}`}
                   className="store-card"
-                  id={`store-${store.id.toString()}`}
+                  id={`store-${store.id}`}
                 >
                   <div
                     className="store-card-banner"
@@ -240,8 +240,8 @@ export default function HomePage() {
               <Leaf size={40} className="promise-icon" />
               <h2>Our Fresh Promise</h2>
               <p>
-                We guarantee freshness on every delivery. If you're not
-                satisfied, we'll replace your item or give you a full
+                We guarantee freshness on every delivery. If you&apos;re not
+                satisfied, we&apos;ll replace your item or give you a full
                 refund — no questions asked.
               </p>
               <Link to="/stores" className="btn btn-primary">
