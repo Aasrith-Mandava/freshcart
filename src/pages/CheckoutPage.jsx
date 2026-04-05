@@ -1,139 +1,379 @@
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { MapPin, Clock, CreditCard, ArrowLeft, Check, Truck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { ShoppingBag, CreditCard, MapPin, CheckCircle } from 'lucide-react';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 
 export default function CheckoutPage() {
-  const { cart, cartTotal, clearCart } = useCart();
+  const { items, subtotal, savings, deliveryFee, serviceFee, tax, total, clearCart, deliveryAddress, setDeliveryAddress } = useCart();
   const { user } = useAuth();
-  const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
 
-  const handleCheckout = (e) => {
-    e.preventDefault();
-    setIsSuccess(true);
-    clearCart();
-    setTimeout(() => {
-      navigate('/');
-    }, 3000);
-  };
+  const [address, setAddress] = useState(deliveryAddress || '');
+  const [deliveryOption, setDeliveryOption] = useState('standard');
+  const [paymentMethod, setPaymentMethod] = useState('card');
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCvv, setCardCvv] = useState('');
+  const [tip, setTip] = useState(2);
+  const [isPlacing, setIsPlacing] = useState(false);
+  const [isPlaced, setIsPlaced] = useState(false);
+  const [instructions, setInstructions] = useState('');
 
-  if (isSuccess) {
+  if (items.length === 0 && !isPlaced) {
     return (
-      <div className="container animate-fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', textAlign: 'center' }}>
-        <CheckCircle size={80} color="var(--success)" style={{ marginBottom: '1.5rem' }} />
-        <h1 className="heading-1" style={{ marginBottom: '1rem' }}>Order Placed!</h1>
-        <p className="text-subtle" style={{ fontSize: '1.25rem' }}>
-          Thank you, {user?.name || 'Guest'}. Your fresh groceries are on the way.
-        </p>
-        <p className="text-subtle" style={{ marginTop: '0.5rem' }}>Redirecting to home...</p>
+      <div className="page-container">
+        <div className="empty-state">
+          <h2>Your cart is empty</h2>
+          <Link to="/" className="btn btn-primary">Start Shopping</Link>
+        </div>
       </div>
     );
   }
 
-  if (cart.length === 0) {
+  const handlePlaceOrder = async () => {
+    if (!address.trim()) {
+      alert('Please enter a delivery address.');
+      return;
+    }
+
+    setIsPlacing(true);
+    await new Promise((r) => setTimeout(r, 2000));
+
+    // Save order
+    const orders = JSON.parse(localStorage.getItem('freshcart_orders') || '[]');
+    const order = {
+      id: `FC-${Date.now()}`,
+      userId: user.id,
+      items: [...items],
+      subtotal,
+      savings,
+      deliveryFee,
+      serviceFee,
+      tax,
+      tip,
+      total: total + tip,
+      address,
+      deliveryOption,
+      instructions,
+      status: 'confirmed',
+      createdAt: new Date().toISOString(),
+      estimatedDelivery: deliveryOption === 'express' ? '25-35 min' : '45-60 min',
+    };
+    orders.push(order);
+    localStorage.setItem('freshcart_orders', JSON.stringify(orders));
+    setDeliveryAddress(address);
+
+    clearCart();
+    setIsPlacing(false);
+    setIsPlaced(true);
+  };
+
+  if (isPlaced) {
     return (
-      <div className="container empty-state animate-fade-in">
-        <ShoppingBag className="empty-icon" size={80} />
-        <h2 className="heading-2">Your cart is empty</h2>
-        <p className="text-subtle" style={{ marginTop: '0.5rem', marginBottom: '1.5rem' }}>
-          You need items in your cart to checkout.
-        </p>
-        <Link to="/" className="btn btn-primary">Start Shopping</Link>
+      <div className="page-container">
+        <motion.div
+          className="order-success"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="success-icon">
+            <Check size={48} />
+          </div>
+          <h1>Order Placed!</h1>
+          <p>Your groceries are on the way. Sit back and relax!</p>
+          <div className="success-details">
+            <div className="success-detail-item">
+              <Truck size={20} />
+              <span>Estimated delivery: {deliveryOption === 'express' ? '25-35 min' : '45-60 min'}</span>
+            </div>
+            <div className="success-detail-item">
+              <MapPin size={20} />
+              <span>{address}</span>
+            </div>
+          </div>
+          <div className="success-actions">
+            <Link to="/orders" className="btn btn-primary">View Orders</Link>
+            <Link to="/" className="btn btn-outline">Continue Shopping</Link>
+          </div>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="container animate-fade-in" style={{ paddingBottom: '4rem' }}>
-      <h1 className="heading-2" style={{ marginBottom: '2rem' }}>Checkout</h1>
+    <div className="checkout-page">
+      <div className="page-container">
+        <Link to="/cart" className="back-link">
+          <ArrowLeft size={18} /> Back to Cart
+        </Link>
 
-      <div className="checkout-grid">
-        <form onSubmit={handleCheckout} className="checkout-form">
-          <div className="checkout-section">
-            <h3 className="checkout-section-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <MapPin size={20} color="var(--primary)" /> Delivery Details
-            </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <h1 className="page-title">Checkout</h1>
+
+        <div className="checkout-layout">
+          <div className="checkout-form">
+            {/* Delivery Address */}
+            <motion.div
+              className="checkout-section"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <h2>
+                <MapPin size={20} /> Delivery Address
+              </h2>
               <div className="form-group">
-                <label className="form-label">First Name</label>
-                <input type="text" className="input-field" required defaultValue={user?.name} />
+                <input
+                  type="text"
+                  placeholder="Enter your full delivery address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  id="checkout-address"
+                />
               </div>
               <div className="form-group">
-                <label className="form-label">Last Name</label>
-                <input type="text" className="input-field" required />
+                <textarea
+                  placeholder="Delivery instructions (optional)"
+                  value={instructions}
+                  onChange={(e) => setInstructions(e.target.value)}
+                  rows={2}
+                  id="checkout-instructions"
+                />
               </div>
-            </div>
-            <div className="form-group">
-              <label className="form-label">Address</label>
-              <input type="text" className="input-field" required placeholder="123 Fresh Lane" />
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1rem' }}>
-              <div className="form-group">
-                <label className="form-label">City</label>
-                <input type="text" className="input-field" required />
+            </motion.div>
+
+            {/* Delivery Speed */}
+            <motion.div
+              className="checkout-section"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <h2>
+                <Clock size={20} /> Delivery Speed
+              </h2>
+              <div className="delivery-options">
+                <label
+                  className={`delivery-option ${deliveryOption === 'standard' ? 'active' : ''}`}
+                >
+                  <input
+                    type="radio"
+                    name="delivery"
+                    value="standard"
+                    checked={deliveryOption === 'standard'}
+                    onChange={() => setDeliveryOption('standard')}
+                  />
+                  <div className="delivery-option-content">
+                    <strong>Standard</strong>
+                    <span>45–60 min</span>
+                  </div>
+                  <span className="delivery-option-price">
+                    {deliveryFee === 0 ? 'Free' : `$${deliveryFee.toFixed(2)}`}
+                  </span>
+                </label>
+                <label
+                  className={`delivery-option ${deliveryOption === 'express' ? 'active' : ''}`}
+                >
+                  <input
+                    type="radio"
+                    name="delivery"
+                    value="express"
+                    checked={deliveryOption === 'express'}
+                    onChange={() => setDeliveryOption('express')}
+                  />
+                  <div className="delivery-option-content">
+                    <strong>Express</strong>
+                    <span>25–35 min</span>
+                  </div>
+                  <span className="delivery-option-price">+$3.99</span>
+                </label>
               </div>
-              <div className="form-group">
-                <label className="form-label">Zip Code</label>
-                <input type="text" className="input-field" required />
+            </motion.div>
+
+            {/* Tip */}
+            <motion.div
+              className="checkout-section"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <h2>Tip your shopper</h2>
+              <div className="tip-options">
+                {[0, 2, 5, 10].map((amount) => (
+                  <button
+                    key={amount}
+                    className={`tip-btn ${tip === amount ? 'active' : ''}`}
+                    onClick={() => setTip(amount)}
+                  >
+                    {amount === 0 ? 'None' : `$${amount}`}
+                  </button>
+                ))}
               </div>
-            </div>
+            </motion.div>
+
+            {/* Payment */}
+            <motion.div
+              className="checkout-section"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <h2>
+                <CreditCard size={20} /> Payment Method
+              </h2>
+              <div className="payment-methods">
+                <label className={`payment-option ${paymentMethod === 'card' ? 'active' : ''}`}>
+                  <input
+                    type="radio"
+                    name="payment"
+                    value="card"
+                    checked={paymentMethod === 'card'}
+                    onChange={() => setPaymentMethod('card')}
+                  />
+                  💳 Credit / Debit Card
+                </label>
+                <label className={`payment-option ${paymentMethod === 'apple' ? 'active' : ''}`}>
+                  <input
+                    type="radio"
+                    name="payment"
+                    value="apple"
+                    checked={paymentMethod === 'apple'}
+                    onChange={() => setPaymentMethod('apple')}
+                  />
+                  🍎 Apple Pay
+                </label>
+              </div>
+
+              {paymentMethod === 'card' && (
+                <div className="card-form">
+                  <div className="form-group">
+                    <label htmlFor="card-number">Card Number</label>
+                    <input
+                      type="text"
+                      id="card-number"
+                      placeholder="1234 5678 9012 3456"
+                      value={cardNumber}
+                      onChange={(e) => setCardNumber(e.target.value)}
+                      maxLength={19}
+                    />
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="card-expiry">Expiry</label>
+                      <input
+                        type="text"
+                        id="card-expiry"
+                        placeholder="MM/YY"
+                        value={cardExpiry}
+                        onChange={(e) => setCardExpiry(e.target.value)}
+                        maxLength={5}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="card-cvv">CVV</label>
+                      <input
+                        type="text"
+                        id="card-cvv"
+                        placeholder="123"
+                        value={cardCvv}
+                        onChange={(e) => setCardCvv(e.target.value)}
+                        maxLength={4}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </motion.div>
           </div>
 
-          <div className="checkout-section">
-            <h3 className="checkout-section-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <CreditCard size={20} color="var(--primary)" /> Payment Method
-            </h3>
-            <div className="form-group">
-              <label className="form-label">Card Number</label>
-              <input type="text" className="input-field" required placeholder="0000 0000 0000 0000" />
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div className="form-group">
-                <label className="form-label">Expiry Date</label>
-                <input type="text" className="input-field" required placeholder="MM/YY" />
-              </div>
-              <div className="form-group">
-                <label className="form-label">CVC</label>
-                <input type="text" className="input-field" required placeholder="123" />
-              </div>
-            </div>
-          </div>
+          {/* Order Summary Sidebar */}
+          <motion.div
+            className="checkout-summary"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <h2>Order Summary</h2>
 
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '1.25rem', fontSize: '1.125rem' }}>
-            Place Order (${(cartTotal + 5.99).toFixed(2)})
-          </button>
-        </form>
+            <div className="checkout-items-preview">
+              {items.map((item) => (
+                <div key={item.id} className="checkout-item-row">
+                  <span className="checkout-item-emoji">{item.image}</span>
+                  <span className="checkout-item-name">
+                    {item.name} × {item.quantity}
+                  </span>
+                  <span className="checkout-item-price">
+                    $
+                    {(
+                      (item.discount
+                        ? item.price * (1 - item.discount / 100)
+                        : item.price) * item.quantity
+                    ).toFixed(2)}
+                  </span>
+                </div>
+              ))}
+            </div>
 
-        <div className="checkout-section" style={{ position: 'sticky', top: '6rem' }}>
-          <h3 className="checkout-section-title">Order Summary</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
-            {cart.map(item => (
-              <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem' }}>
-                <span style={{ display: 'flex', gap: '0.5rem' }}>
-                  <span className="text-subtle">{item.quantity}x</span>
-                  <span>{item.name}</span>
+            <div className="summary-lines">
+              <div className="summary-line">
+                <span>Subtotal</span>
+                <span>${subtotal.toFixed(2)}</span>
+              </div>
+              {savings > 0 && (
+                <div className="summary-line savings">
+                  <span>Savings</span>
+                  <span>-${savings.toFixed(2)}</span>
+                </div>
+              )}
+              <div className="summary-line">
+                <span>Delivery</span>
+                <span>
+                  {deliveryFee === 0 ? 'Free' : `$${deliveryFee.toFixed(2)}`}
+                  {deliveryOption === 'express' && ' + $3.99'}
                 </span>
-                <span style={{ fontWeight: '500' }}>${(item.price * item.quantity).toFixed(2)}</span>
               </div>
-            ))}
-          </div>
-          
-          <div style={{ borderTop: '1px solid var(--divider)', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
-              <span>Subtotal</span>
-              <span>${cartTotal.toFixed(2)}</span>
+              <div className="summary-line">
+                <span>Service fee</span>
+                <span>${serviceFee.toFixed(2)}</span>
+              </div>
+              <div className="summary-line">
+                <span>Tax</span>
+                <span>${tax.toFixed(2)}</span>
+              </div>
+              <div className="summary-line">
+                <span>Tip</span>
+                <span>${tip.toFixed(2)}</span>
+              </div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)' }}>
-              <span>Delivery Fee</span>
-              <span>$5.99</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.25rem', fontWeight: '700', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--divider)' }}>
+
+            <div className="summary-total">
               <span>Total</span>
-              <span>${(cartTotal + 5.99).toFixed(2)}</span>
+              <span>
+                $
+                {(
+                  total +
+                  tip +
+                  (deliveryOption === 'express' ? 3.99 : 0)
+                ).toFixed(2)}
+              </span>
             </div>
-          </div>
+
+            <button
+              className="btn btn-primary btn-full btn-large"
+              onClick={handlePlaceOrder}
+              disabled={isPlacing}
+              id="place-order-btn"
+            >
+              {isPlacing ? (
+                <span className="btn-loading">
+                  <span className="spinner small" /> Placing Order...
+                </span>
+              ) : (
+                `Place Order — $${(total + tip + (deliveryOption === 'express' ? 3.99 : 0)).toFixed(2)}`
+              )}
+            </button>
+          </motion.div>
         </div>
       </div>
     </div>

@@ -1,41 +1,88 @@
-import { Plus, Minus, ShoppingCart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { useState } from 'react';
+import { Plus, Minus, Star, Leaf } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-export default function ProductCard({ product }) {
-  const { addToCart, updateQuantity, cart } = useCart();
-  const cartItem = cart.find(item => item.id === product.id);
-  const qty = cartItem ? cartItem.quantity : 0;
+export default function ProductCard({ product, index = 0 }) {
+  const { addItem, removeItem, getItemQuantity, updateQuantity } = useCart();
+  const quantity = getItemQuantity(product.id);
+
+  const discountedPrice = product.discount
+    ? product.price * (1 - product.discount / 100)
+    : null;
 
   return (
-    <div className="product-card">
-      <div className="product-image-container">
-        <img src={product.image} alt={product.name} className="product-image" loading="lazy" />
-      </div>
-      <div className="product-content">
-        <div className="product-price">${product.price.toFixed(2)}</div>
-        <h3 className="product-title">{product.name}</h3>
-        <p className="product-meta">{product.unit} • {product.description.substring(0, 40)}...</p>
-        
-        <div className="add-to-cart-wrapper">
-          {qty === 0 ? (
-            <button className="btn-add-cart" onClick={() => addToCart(product)}>
-              <Plus size={18} />
-              Add to Cart
+    <motion.div
+      className="product-card"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
+      id={`product-card-${product.id}`}
+    >
+      {product.discount && (
+        <div className="product-badge discount">-{product.discount}%</div>
+      )}
+      {product.isOrganic && (
+        <div className="product-badge organic">
+          <Leaf size={12} /> Organic
+        </div>
+      )}
+
+      <Link to={`/product/${product.id}`} className="product-card-image">
+        <span className="product-emoji">{product.image}</span>
+      </Link>
+
+      <div className="product-card-content">
+        <Link to={`/product/${product.id}`} className="product-card-name">
+          {product.name}
+        </Link>
+
+        <div className="product-card-price">
+          {discountedPrice ? (
+            <>
+              <span className="price-current">${discountedPrice.toFixed(2)}</span>
+              <span className="price-original">${product.price.toFixed(2)}</span>
+            </>
+          ) : (
+            <span className="price-current">${product.price.toFixed(2)}</span>
+          )}
+          <span className="price-unit">/ {product.unit}</span>
+        </div>
+
+        <div className="product-card-rating">
+          <Star size={14} className="star-icon" />
+          <span>{product.rating}</span>
+          <span className="rating-count">({product.reviews.toLocaleString()})</span>
+        </div>
+
+        <div className="product-card-actions">
+          {quantity === 0 ? (
+            <button
+              className="btn btn-add"
+              onClick={() => addItem(product)}
+              id={`add-btn-${product.id}`}
+            >
+              <Plus size={16} /> Add
             </button>
           ) : (
-            <div className="quantity-control" style={{ width: '100%', height: '2.5rem' }}>
-              <button className="quantity-btn" onClick={() => updateQuantity(product.id, qty - 1)}>
+            <div className="quantity-control">
+              <button
+                className="qty-btn"
+                onClick={() => updateQuantity(product.id, quantity - 1)}
+              >
                 <Minus size={16} />
               </button>
-              <span className="quantity-text">{qty} in cart</span>
-              <button className="quantity-btn" onClick={() => updateQuantity(product.id, qty + 1)}>
+              <span className="qty-value">{quantity}</span>
+              <button
+                className="qty-btn"
+                onClick={() => updateQuantity(product.id, quantity + 1)}
+              >
                 <Plus size={16} />
               </button>
             </div>
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -1,62 +1,256 @@
-import { categories, products } from '../data/mockData';
-import CategoryCard from '../components/CategoryCard';
-import ProductCard from '../components/ProductCard';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Clock, Truck, Shield, Star, ArrowRight, Zap, Leaf } from 'lucide-react';
+import ProductCard from '../components/ProductCard';
+import { stores, categories, getFeaturedProducts, getDeals } from '../data/products';
+import heroBanner from '../assets/hero-banner.png';
 
 export default function HomePage() {
+  const featured = getFeaturedProducts();
+  const deals = getDeals().slice(0, 4);
+
   return (
-    <div className="container animate-fade-in">
+    <div className="home-page">
       {/* Hero Section */}
-      <section className="hero">
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: 'var(--primary)', fontWeight: '600', background: 'var(--primary-light)', padding: '0.5rem 1rem', borderRadius: 'var(--radius-full)' }}>
-            <Sparkles size={16} /> Fresh groceries, delivered fast
+      <section className="hero-section" id="hero-section">
+        <div className="hero-content">
+          <motion.div
+            className="hero-text"
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }}
+          >
+            <div className="hero-badge">
+              <Zap size={14} /> Free delivery on orders $35+
+            </div>
+            <h1>
+              Groceries delivered in{' '}
+              <span className="hero-highlight">as fast as 30 min</span>
+            </h1>
+            <p className="hero-subtitle">
+              Shop from your favorite local stores. Fresh produce, pantry
+              staples, and household essentials — all delivered to your door.
+            </p>
+            <div className="hero-actions">
+              <Link to="/stores" className="btn btn-primary btn-large">
+                Shop Now <ArrowRight size={18} />
+              </Link>
+              <Link to="/deals" className="btn btn-outline btn-large">
+                View Deals
+              </Link>
+            </div>
+            <div className="hero-stats">
+              <div className="hero-stat">
+                <strong>10K+</strong>
+                <span>Products</span>
+              </div>
+              <div className="hero-stat">
+                <strong>30 min</strong>
+                <span>Delivery</span>
+              </div>
+              <div className="hero-stat">
+                <strong>4.9★</strong>
+                <span>Rating</span>
+              </div>
+            </div>
+          </motion.div>
+          <motion.div
+            className="hero-image"
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
+            <img src={heroBanner} alt="Fresh groceries" />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="how-it-works" id="how-it-works">
+        <div className="section-container">
+          <h2 className="section-title">How FreshCart Works</h2>
+          <div className="steps-grid">
+            {[
+              {
+                icon: <Star size={28} />,
+                title: 'Choose Your Store',
+                desc: 'Browse from top local stores near you',
+              },
+              {
+                icon: <Shield size={28} />,
+                title: 'Pick Your Items',
+                desc: 'Add groceries to your cart with one tap',
+              },
+              {
+                icon: <Truck size={28} />,
+                title: 'Fast Delivery',
+                desc: 'A personal shopper delivers to your door',
+              },
+              {
+                icon: <Clock size={28} />,
+                title: 'Enjoy & Repeat',
+                desc: 'Reorder your favorites anytime',
+              },
+            ].map((step, i) => (
+              <motion.div
+                key={i}
+                className="step-card"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15 }}
+              >
+                <div className="step-icon">{step.icon}</div>
+                <h3>{step.title}</h3>
+                <p>{step.desc}</p>
+                <div className="step-number">{i + 1}</div>
+              </motion.div>
+            ))}
           </div>
-          <h1 className="heading-1 hero-title">
-            Groceries delivered in as little as <span className="text-gradient">1 hour</span>
-          </h1>
-          <p className="hero-subtitle">
-            Shop fresh produce, everyday essentials, and exclusive deals from your favorite local stores.
-          </p>
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <button className="btn btn-primary" style={{ padding: '1rem 2rem', fontSize: '1.125rem' }}>
-              Shop Now <ArrowRight size={20} />
-            </button>
-          </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* Categories */}
-      <section style={{ marginBottom: '4rem' }}>
-        <h2 className="heading-2" style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          Explore Categories
-          <button className="btn-icon text-subtle" style={{ fontSize: '1rem', background: 'transparent' }}>
-            View All
-          </button>
-        </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '1.5rem' }}>
-          {categories.map((cat, index) => (
-            <CategoryCard key={cat.id} category={cat} delay={index} />
-          ))}
+      <section className="categories-section" id="categories-section">
+        <div className="section-container">
+          <div className="section-header">
+            <h2 className="section-title">Shop by Category</h2>
+            <Link to="/stores" className="section-link">
+              See all <ArrowRight size={16} />
+            </Link>
+          </div>
+          <div className="categories-grid">
+            {categories.map((cat, i) => (
+              <motion.div
+                key={cat.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+              >
+                <Link
+                  to={`/category/${cat.id}`}
+                  className="category-card"
+                  style={{ '--cat-color': cat.color }}
+                  id={`category-${cat.id}`}
+                >
+                  <span className="category-icon">{cat.icon}</span>
+                  <span className="category-name">{cat.name}</span>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Featured Products */}
-      <section style={{ marginBottom: '4rem' }}>
-        <h2 className="heading-2" style={{ marginBottom: '1.5rem' }}>Produce & Essentials</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.5rem' }}>
-          {products.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+      <section className="featured-section" id="featured-section">
+        <div className="section-container">
+          <div className="section-header">
+            <h2 className="section-title">Featured Products</h2>
+            <Link to="/search?q=" className="section-link">
+              View all <ArrowRight size={16} />
+            </Link>
+          </div>
+          <div className="products-grid">
+            {featured.map((product, i) => (
+              <ProductCard key={product.id} product={product} index={i} />
+            ))}
+          </div>
         </div>
       </section>
 
+      {/* Deals */}
+      {deals.length > 0 && (
+        <section className="deals-section" id="deals-section">
+          <div className="section-container">
+            <div className="section-header">
+              <h2 className="section-title">
+                <Zap size={24} className="deals-icon" /> Today&apos;s Deals
+              </h2>
+              <Link to="/deals" className="section-link">
+                All deals <ArrowRight size={16} />
+              </Link>
+            </div>
+            <div className="products-grid">
+              {deals.map((product, i) => (
+                <ProductCard key={product.id} product={product} index={i} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Stores */}
+      <section className="stores-section" id="stores-section">
+        <div className="section-container">
+          <div className="section-header">
+            <h2 className="section-title">Popular Stores</h2>
+            <Link to="/stores" className="section-link">
+              All stores <ArrowRight size={16} />
+            </Link>
+          </div>
+          <div className="stores-grid">
+            {stores.map((store, i) => (
+              <motion.div
+                key={store.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <Link
+                  to={`/store/${store.id}`}
+                  className="store-card"
+                  id={`store-${store.id}`}
+                >
+                  <div
+                    className="store-card-banner"
+                    style={{ background: store.color }}
+                  >
+                    <span className="store-logo">{store.logo}</span>
+                  </div>
+                  <div className="store-card-content">
+                    <h3>{store.name}</h3>
+                    <p>{store.description}</p>
+                    <div className="store-card-meta">
+                      <span>
+                        <Clock size={14} /> {store.deliveryTime}
+                      </span>
+                      <span>
+                        <Truck size={14} /> ${store.deliveryFee.toFixed(2)}
+                      </span>
+                      <span>
+                        <Star size={14} /> {store.rating}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Fresh Promise Banner */}
+      <section className="promise-section" id="promise-section">
+        <div className="section-container">
+          <div className="promise-card">
+            <div className="promise-content">
+              <Leaf size={40} className="promise-icon" />
+              <h2>Our Fresh Promise</h2>
+              <p>
+                We guarantee freshness on every delivery. If you&apos;re not
+                satisfied, we&apos;ll replace your item or give you a full
+                refund — no questions asked.
+              </p>
+              <Link to="/stores" className="btn btn-primary">
+                Start Shopping
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
