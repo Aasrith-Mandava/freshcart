@@ -15,9 +15,9 @@ export default function Footer() {
               Fresh produce, pantry staples, and household essentials.
             </p>
             <div className="footer-social">
-              <a href="#" aria-label="Facebook">📘</a>
-              <a href="#" aria-label="Twitter">🐦</a>
-              <a href="#" aria-label="Instagram">📸</a>
+              <Link to="/" aria-label="Facebook">📘</Link>
+              <Link to="/" aria-label="Twitter">🐦</Link>
+              <Link to="/" aria-label="Instagram">📸</Link>
             </div>
           </div>
 
@@ -39,19 +39,19 @@ export default function Footer() {
 
           <div className="footer-links">
             <h4>Support</h4>
-            <a href="#">Help Center</a>
-            <a href="#">Contact Us</a>
-            <a href="#">Delivery FAQ</a>
-            <a href="#">Returns</a>
+            <Link to="/">Help Center</Link>
+            <Link to="/">Contact Us</Link>
+            <Link to="/">Delivery FAQ</Link>
+            <Link to="/">Returns</Link>
           </div>
         </div>
 
         <div className="footer-bottom">
           <p>&copy; {new Date().getFullYear()} FreshCart. All rights reserved.</p>
           <div className="footer-bottom-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Accessibility</a>
+            <Link to="/">Privacy Policy</Link>
+            <Link to="/">Terms of Service</Link>
+            <Link to="/">Accessibility</Link>
           </div>
         </div>
       </div>

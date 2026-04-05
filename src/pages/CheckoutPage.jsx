@@ -19,6 +19,9 @@ export default function CheckoutPage() {
   const [isPlacing, setIsPlacing] = useState(false);
   const [isPlaced, setIsPlaced] = useState(false);
   const [instructions, setInstructions] = useState('');
+  const [errorLine, setErrorLine] = useState('');
+
+  const EXPRESS_DELIVERY_FEE = 3.99;
 
   if (items.length === 0 && !isPlaced) {
     return (
@@ -33,9 +36,10 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = async () => {
     if (!address.trim()) {
-      alert('Please enter a delivery address.');
+      setErrorLine('Please enter a delivery address.');
       return;
     }
+    setErrorLine('');
 
     setIsPlacing(true);
     await new Promise((r) => setTimeout(r, 2000));
@@ -110,6 +114,7 @@ export default function CheckoutPage() {
         </Link>
 
         <h1 className="page-title">Checkout</h1>
+        {errorLine && <div className="error-message" style={{ color: 'red', marginBottom: '1rem' }}>{errorLine}</div>}
 
         <div className="checkout-layout">
           <div className="checkout-form">
@@ -185,7 +190,7 @@ export default function CheckoutPage() {
                     <strong>Express</strong>
                     <span>25–35 min</span>
                   </div>
-                  <span className="delivery-option-price">+$3.99</span>
+                  <span className="delivery-option-price">+${EXPRESS_DELIVERY_FEE}</span>
                 </label>
               </div>
             </motion.div>
@@ -329,7 +334,7 @@ export default function CheckoutPage() {
                 <span>Delivery</span>
                 <span>
                   {deliveryFee === 0 ? 'Free' : `$${deliveryFee.toFixed(2)}`}
-                  {deliveryOption === 'express' && ' + $3.99'}
+                  {deliveryOption === 'express' && ` + $${EXPRESS_DELIVERY_FEE}`}
                 </span>
               </div>
               <div className="summary-line">
@@ -353,7 +358,7 @@ export default function CheckoutPage() {
                 {(
                   total +
                   tip +
-                  (deliveryOption === 'express' ? 3.99 : 0)
+                  (deliveryOption === 'express' ? EXPRESS_DELIVERY_FEE : 0)
                 ).toFixed(2)}
               </span>
             </div>
@@ -369,7 +374,7 @@ export default function CheckoutPage() {
                   <span className="spinner small" /> Placing Order...
                 </span>
               ) : (
-                `Place Order — $${(total + tip + (deliveryOption === 'express' ? 3.99 : 0)).toFixed(2)}`
+                `Place Order — $${(total + tip + (deliveryOption === 'express' ? EXPRESS_DELIVERY_FEE : 0)).toFixed(2)}`
               )}
             </button>
           </motion.div>
