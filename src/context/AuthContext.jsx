@@ -1,18 +1,19 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('freshcart_user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+  const [user, setUser] = useState(() => {
+    try {
+      const stored = localStorage.getItem('freshcart_user');
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
     }
-    setIsLoading(false);
-  }, []);
+  });
+
+  const isLoading = false;
 
   const signup = (name, email, password) => {
     const users = JSON.parse(localStorage.getItem('freshcart_users') || '[]');

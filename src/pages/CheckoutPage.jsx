@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MapPin, Clock, CreditCard, ArrowLeft, Check, Truck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -8,7 +8,6 @@ import { useAuth } from '../context/AuthContext';
 export default function CheckoutPage() {
   const { items, subtotal, savings, deliveryFee, serviceFee, tax, total, clearCart, deliveryAddress, setDeliveryAddress } = useCart();
   const { user } = useAuth();
-  const navigate = useNavigate();
 
   const [address, setAddress] = useState(deliveryAddress || '');
   const [deliveryOption, setDeliveryOption] = useState('standard');

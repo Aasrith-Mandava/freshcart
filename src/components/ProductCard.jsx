@@ -4,7 +4,7 @@ import { Plus, Minus, Star, Leaf } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function ProductCard({ product, index = 0 }) {
-  const { addItem, removeItem, getItemQuantity, updateQuantity } = useCart();
+  const { addItem, getItemQuantity, updateQuantity } = useCart();
   const quantity = getItemQuantity(product.id);
 
   const discountedPrice = product.discount

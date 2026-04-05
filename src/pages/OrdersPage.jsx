@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Package, Clock, MapPin, ChevronRight, ShoppingBag } from 'lucide-react';
@@ -6,14 +6,11 @@ import { useAuth } from '../context/AuthContext';
 
 export default function OrdersPage() {
   const { user } = useAuth();
-  const [orders, setOrders] = useState([]);
-
-  useEffect(() => {
+  const orders = useMemo(() => {
     const allOrders = JSON.parse(localStorage.getItem('freshcart_orders') || '[]');
-    const userOrders = allOrders
+    return allOrders
       .filter((o) => o.userId === user?.id)
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    setOrders(userOrders);
   }, [user]);
 
   const statusColors = {
