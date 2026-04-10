@@ -29,7 +29,7 @@ export function AuthProvider({ children }) {
       password,
       avatar: name.charAt(0).toUpperCase(),
       address: '',
-      phone: '',
+phone: '',
       createdAt: new Date().toISOString(),
     };
 
@@ -77,10 +77,10 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const authValue = useMemo(() => ({ user, isLoading, signup, login, logout, updateProfile }), [user, isLoading, signup, login, logout, updateProfile]);
+
   return (
-    <AuthContext.Provider
-      value={{ user, isLoading, signup, login, logout, updateProfile }}
-    >
+    <AuthContext.Provider value={authValue}>
       {children}
     </AuthContext.Provider>
   );
