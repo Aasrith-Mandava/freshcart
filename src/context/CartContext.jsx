@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo, PropTypes } from 'react';
 
 const CartContext = createContext(null);
 
@@ -54,6 +54,9 @@ export function CartProvider({ children }) {
   const clearCart = () => setItems([]);
 
   const getItemQuantity = (productId) => {
+  CartProvider.propTypes = {
+    children: PropTypes.node.isRequired
+  };
     const item = items.find((i) => i.id === productId);
     return item ? item.quantity : 0;
   };

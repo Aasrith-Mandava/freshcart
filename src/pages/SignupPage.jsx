@@ -91,7 +91,7 @@ export default function SignupPage() {
                 placeholder="John Doe"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                autoComplete="name"
+autoComplete="name"
               />
             </div>
           </div>
@@ -138,12 +138,7 @@ export default function SignupPage() {
                   <div
                     className="strength-fill"
                     style={{
-                      width:
-                        strength.level === 'weak'
-                          ? '33%'
-                          : strength.level === 'medium'
-                          ? '66%'
-                          : '100%',
+                      width: getStrengthWidth(strength.level),
                       background: strength.color,
                     }}
                   />

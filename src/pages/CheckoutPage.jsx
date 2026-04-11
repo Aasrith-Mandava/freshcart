@@ -324,7 +324,7 @@ export default function CheckoutPage() {
                 <span>Subtotal</span>
                 <span>${subtotal.toFixed(2)}</span>
               </div>
-              {savings > 0 && (
+{savings > 0 && (
                 <div className="summary-line savings">
                   <span>Savings</span>
                   <span>-${savings.toFixed(2)}</span>
@@ -374,7 +374,7 @@ export default function CheckoutPage() {
                   <span className="spinner small" /> Placing Order...
                 </span>
               ) : (
-                `Place Order — $${(total + tip + (deliveryOption === 'express' ? EXPRESS_DELIVERY_FEE : 0)).toFixed(2)}`
+                `Place Order — $${getTotalAmount().toFixed(2)}`
               )}
             </button>
           </motion.div>
@@ -382,4 +382,5 @@ export default function CheckoutPage() {
       </div>
     </div>
   );
-}
+
+  const getTotalAmount = () => total + tip + (deliveryOption === 'express' ? EXPRESS_DELIVERY_FEE : 0)

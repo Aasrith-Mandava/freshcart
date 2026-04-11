@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, PropTypes } from 'react';
 
 const AuthContext = createContext(null);
 
@@ -54,6 +54,11 @@ export function AuthProvider({ children }) {
     const { password: _, ...safeUser } = found;
     setUser(safeUser);
     localStorage.setItem('freshcart_user', JSON.stringify(safeUser));
+  };
+
+  AuthProvider.propTypes = {
+    children: PropTypes.node,
+  };
 
     return { success: true };
   };

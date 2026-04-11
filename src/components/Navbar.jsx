@@ -197,7 +197,7 @@ export default function Navbar() {
                       <Heart size={16} /> Favorites
                     </Link>
                     <Link
-                      to="/account"
+to="/account"
                       className="user-dropdown-item"
                       onClick={() => setShowUserMenu(false)}
                     >
@@ -247,7 +247,12 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {showMobileMenu && (
-        <div className="mobile-nav-overlay" onClick={() => setShowMobileMenu(false)}>
+        <div 
+          className="mobile-nav-overlay" 
+          role="button" 
+          tabIndex="0" 
+          onClick={() => setShowMobileMenu(false)}
+        >
           <div className="mobile-nav" onClick={(e) => e.stopPropagation()}>
             <div className="mobile-nav-header">
               <span className="logo-icon">🛒</span>

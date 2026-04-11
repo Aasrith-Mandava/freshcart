@@ -212,7 +212,6 @@ input, textarea, select { font: inherit; }
 .hero-stat span { font-size: .8125rem; color: var(--text-secondary); }
 .hero-image { position: relative; }
 .hero-image img { border-radius: 1.5rem; box-shadow: var(--shadow-lg); }
-
 /* ── How It Works ── */
 .how-it-works { padding: 4rem 0; }
 .how-it-works .section-title { text-align: center; margin-bottom: 2.5rem; }
@@ -262,7 +261,6 @@ input, textarea, select { font: inherit; }
 .product-card-rating { display: flex; align-items: center; gap: .25rem; font-size: .8125rem; color: var(--text-secondary); margin-bottom: .75rem; }
 .star-icon { color: var(--accent); fill: var(--accent); }
 .rating-count { color: var(--text-light); }
-.product-card-actions { }
 .btn-add { width: 100%; background: var(--primary-light); color: var(--primary); font-weight: 600; border-radius: var(--radius-sm); padding: .5rem; transition: all var(--transition); }
 .btn-add:hover { background: var(--primary); color: #fff; }
 .quantity-control { display: flex; align-items: center; justify-content: center; gap: .75rem; background: var(--border-light); border-radius: var(--radius-sm); padding: .25rem; }
