@@ -446,7 +446,7 @@ input, textarea, select { font: inherit; }
 .account-section h3 { font-size: 1rem; margin-bottom: .75rem; }
 .account-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .account-info-item { display: flex; flex-direction: column; }
-.account-info-label { font-size: .75rem; color: var(--text-secondary); margin-bottom: .25rem; }
+.account-info-label { font-size: .75rem; color: #000; margin-bottom: .25rem; }
 .account-info-value { font-weight: 600; font-size: .875rem; }
 
 /* ── Auth Pages ── */
@@ -456,12 +456,12 @@ input, textarea, select { font: inherit; }
 .auth-logo { display: inline-block; margin-bottom: 1rem; }
 .auth-logo .logo-icon { font-size: 3rem; }
 .auth-header h1 { font-size: 1.5rem; margin-bottom: .375rem; }
-.auth-header p { color: var(--text-secondary); font-size: .875rem; }
+.auth-header p { color: #000; font-size: .875rem; }
 .auth-error { display: flex; align-items: center; gap: .5rem; padding: .75rem 1rem; background: #fee2e2; color: #dc2626; border-radius: var(--radius-sm); font-size: .875rem; margin-bottom: 1rem; }
 .auth-form { margin-bottom: 1.5rem; }
-.auth-footer { text-align: center; font-size: .875rem; color: var(--text-secondary); }
+.auth-footer { text-align: center; font-size: .875rem; color: #000; }
 .auth-footer a { color: var(--primary); font-weight: 600; }
-.auth-divider { display: flex; align-items: center; gap: 1rem; margin: 1.5rem 0; color: var(--text-light); font-size: .8125rem; }
+.auth-divider { display: flex; align-items: center; gap: 1rem; margin: 1.5rem 0; color: #000; font-size: .8125rem; }
 .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 .auth-social { display: flex; flex-direction: column; gap: .75rem; }
 .password-strength { display: flex; align-items: center; gap: .75rem; margin-top: .5rem; }
@@ -482,7 +482,7 @@ input, textarea, select { font: inherit; }
 
 /* ── Favorites ── */
 .favorite-wrapper { position: relative; }
-.favorite-remove { position: absolute; top: .75rem; right: .75rem; z-index: 3; width: 32px; height: 32px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); transition: all var(--transition); color: var(--text-light); }
+.favorite-remove { position: absolute; top: .75rem; right: .75rem; z-index: 3; width: 32px; height: 32px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); transition: all var(--transition); color: #000; }
 .favorite-remove:hover { color: #ef4444; background: #fee2e2; }
 
 /* ── Footer ── */

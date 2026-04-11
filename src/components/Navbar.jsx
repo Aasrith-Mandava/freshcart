@@ -197,7 +197,7 @@ export default function Navbar() {
                       <Heart size={16} /> Favorites
                     </Link>
                     <Link
-                      to="/account"
+to="/account"
                       className="user-dropdown-item"
                       onClick={() => setShowUserMenu(false)}
                     >
@@ -276,15 +276,13 @@ export default function Navbar() {
                 <>
                   <Link to="/orders" onClick={() => setShowMobileMenu(false)}>Orders</Link>
                   <Link to="/account" onClick={() => setShowMobileMenu(false)}>Account</Link>
-                  <button
-                    onClick={() => {
+                  <div role="button" tabIndex="0" onClick={() => {
                       logout();
                       setShowMobileMenu(false);
                       navigate('/');
-                    }}
-                  >
+                    }}>
                     Log Out
-                  </button>
+                  </div>
                 </>
               ) : (
                 <>
