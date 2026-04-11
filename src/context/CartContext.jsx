@@ -43,7 +43,7 @@ export function CartProvider({ children }) {
     if (quantity <= 0) {
       removeItem(productId);
       return;
-    }
+}
     setItems((prev) =>
       prev.map((item) =>
         item.id === productId ? { ...item, quantity } : item
@@ -91,26 +91,26 @@ export function CartProvider({ children }) {
       };
     }, [items]);
 
+  const contextValue = useMemo(() => ({
+    items,
+    addItem,
+    removeItem,
+    updateQuantity,
+    clearCart,
+    getItemQuantity,
+    subtotal,
+    savings,
+    deliveryFee,
+    serviceFee,
+    tax,
+    total,
+    itemCount,
+    deliveryAddress,
+    setDeliveryAddress,
+  }), [items, addItem, removeItem, updateQuantity, clearCart, getItemQuantity, subtotal, savings, deliveryFee, serviceFee, tax, total, itemCount, deliveryAddress, setDeliveryAddress]);
+
   return (
-    <CartContext.Provider
-      value={{
-        items,
-        addItem,
-        removeItem,
-        updateQuantity,
-        clearCart,
-        getItemQuantity,
-        subtotal,
-        savings,
-        deliveryFee,
-        serviceFee,
-        tax,
-        total,
-        itemCount,
-        deliveryAddress,
-        setDeliveryAddress,
-      }}
-    >
+    <CartContext.Provider value={contextValue}>
       {children}
     </CartContext.Provider>
   );

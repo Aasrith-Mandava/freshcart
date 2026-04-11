@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { Plus, Minus, Star, Leaf } from 'lucide-react';
 import { motion } from 'framer-motion';
+import PropTypes from 'prop-types';
 
 export default function ProductCard({ product, index = 0 }) {
   const { addItem, getItemQuantity, updateQuantity } = useCart();

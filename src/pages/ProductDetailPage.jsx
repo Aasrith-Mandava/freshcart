@@ -32,7 +32,7 @@ export default function ProductDetailPage() {
     .slice(0, 4);
 
   return (
-    <div className="product-detail-page">
+<div className="product-detail-page">
       <div className="page-container">
         <Link to="/" className="back-link">
           <ArrowLeft size={18} /> Continue Shopping
@@ -82,7 +82,7 @@ export default function ProductDetailPage() {
               <div className="stars">
                 {[...Array(5)].map((_, i) => (
                   <Star
-                    key={i}
+                    key={`star-${i}`}
                     size={18}
                     className={i < Math.floor(product.rating) ? 'star-filled' : 'star-empty'}
                   />
